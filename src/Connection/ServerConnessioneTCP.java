@@ -27,6 +27,7 @@ public class ServerConnessioneTCP {
         ServerSocket sSocket = null;
         //oggetto da usare per realizzare la connessione TCP
         Socket connection;
+        //blablabla
 
         while(true){
             try{
