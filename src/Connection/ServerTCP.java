@@ -10,6 +10,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +31,9 @@ ServerSocket sSocket = null;
 String serverIp = "localhost";
 //porta del server in ascolto
 int porta = 2000;
+DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+Date data = new Date();
+    
     
 //Creiamo i due stream che ci servono
 DataInputStream dataIn;
@@ -56,16 +62,29 @@ Scanner input = new Scanner(System.in);
     public void comunica()
     {
         try {
-                System.out.println("Inserisci il tuo messaggio: ");
-                String msg = input.nextLine();
-                dataOut.writeUTF(msg);
-                dataOut.flush();
-                
-                System.out.println("Messaggio del client: " + dataIn.readUTF());
-                
+                if(dataIn.readUTF().contentEquals("Voglio la data"))
+                {
+                    comunicaData();
+                }
+                else
+                {
+                    System.out.println("Messaggio del client: " + dataIn.readUTF());
+                }
             } catch (IOException ex) {
                 System.err.println(ex);
             }
+    }
+    
+    public void comunicaData()
+    {
+
+            try {
+                dataOut.writeUTF(dateFormat.format(data));
+                dataOut.flush();
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+    
     }
     
     public void chiudiConnessione()
