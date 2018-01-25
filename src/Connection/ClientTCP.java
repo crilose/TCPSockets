@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -25,6 +28,8 @@ public class ClientTCP {
     String serverIp = "localhost";
     //porta del server in ascolto
     int porta = 2000;
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    Date data = new Date();
     
     //Creiamo i due stream che ci servono
     DataInputStream dataIn;
@@ -56,17 +61,25 @@ public class ClientTCP {
     
     public void comunica()
     {
-        try {
-                System.out.println("Inserisci il tuo messaggio: ");
-                String msg = input.nextLine();
-                dataOut.writeUTF(msg);
-                dataOut.flush();
-                
+        try {  
+                chiediData();
                 System.out.println("Messaggio del server: " + dataIn.readUTF());
                 
             } catch (IOException ex) {
                 System.err.println(ex);
             }
+    }
+    
+    public void chiediData()
+    {
+    try {
+        dataOut.writeUTF("Voglio la data");
+        dataOut.flush();
+        
+    } catch (IOException ex) {
+       System.err.println(ex);
+    }
+        
     }
     
     public void chiudiConnessione()
