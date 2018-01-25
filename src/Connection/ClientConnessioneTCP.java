@@ -23,6 +23,7 @@ public class ClientConnessioneTCP {
         ClientTCP client = new ClientTCP();
         client.connessione();
         client.comunica();
+       // client.chiediData();
         client.chiudiConnessione();
 }
 }
