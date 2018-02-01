@@ -5,9 +5,12 @@
  */
 package Connection;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -34,6 +37,8 @@ public class ClientTCP {
     //Creiamo i due stream che ci servono
     DataInputStream dataIn;
     DataOutputStream dataOut;
+    BufferedReader file;
+    PrintWriter fileOut;
     
     //Creiamo lo scanner per l'input
     Scanner input = new Scanner(System.in);
@@ -43,8 +48,8 @@ public class ClientTCP {
         try{
             connessione = new Socket(serverIp, porta);
             System.out.println("Connessione aperta");
-            dataIn = new DataInputStream(connessione.getInputStream());
-            dataOut = new DataOutputStream(connessione.getOutputStream());
+            file = new BufferedReader(new FileReader("testfile.txt"));
+            fileOut = new PrintWriter(connessione.getOutputStream());
         }
         catch(ConnectException e){
             System.err.println("Server non disponibile!");
@@ -61,38 +66,19 @@ public class ClientTCP {
     
     public void comunica()
     {
+        String riga;
         try {  
-                chiediSaluto();
-                System.out.println("Messaggio del server: " + dataIn.readUTF());
-                
+                while ((riga = file.readLine()) != null)
+                {
+                    fileOut.println(riga);
+                    fileOut.flush();
+                }
+   
             } catch (IOException ex) {
                 System.err.println(ex);
             }
     }
     
-    public void chiediData()
-    {
-    try {
-        dataOut.writeUTF("Voglio la data");
-        dataOut.flush();
-        
-    } catch (IOException ex) {
-       System.err.println(ex);
-    }
-        
-    }
-    
-    public void chiediSaluto()
-    {
-    try {
-        dataOut.writeUTF("Ti saluto!");
-        dataOut.flush();
-        
-    } catch (IOException ex) {
-       System.err.println(ex);
-    }
-        
-    }
  
     
     public void chiudiConnessione()
