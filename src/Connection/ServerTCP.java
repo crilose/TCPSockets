@@ -5,9 +5,11 @@
  */
 package Connection;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
@@ -36,8 +38,7 @@ Date data = new Date();
     
     
 //Creiamo i due stream che ci servono
-DataInputStream dataIn;
-DataOutputStream dataOut;
+BufferedReader output;
     
 //Creiamo lo scanner per l'input
 Scanner input = new Scanner(System.in);
@@ -51,8 +52,8 @@ Scanner input = new Scanner(System.in);
                 //si è stabilita la connessione
                 connessione = sSocket.accept();
                 System.out.println("Connessione stabilita!");
-                dataIn = new DataInputStream(connessione.getInputStream());
-                dataOut = new DataOutputStream(connessione.getOutputStream());
+                output = new BufferedReader(new InputStreamReader(connessione.getInputStream()));
+                
             }
                catch(IOException e){
                    System.err.println("Errore di I/O!");
@@ -61,31 +62,19 @@ Scanner input = new Scanner(System.in);
     
     public void comunica()
     {
+        String riga;
+        System.out.println("Leggo il file: ");
         try {
-                if(dataIn.readUTF().contentEquals("Voglio la data"))
+                while((riga = output.readLine())!=null)
                 {
-                    comunicaData();
+                    System.out.println(riga);
                 }
-                else
-                {
-                    System.out.println("Messaggio del client: " + dataIn.readUTF());
-                }
-            } catch (IOException ex) {
+        }
+            catch (IOException ex) {
                 System.err.println(ex);
             }
     }
-    
-    public void comunicaData()
-    {
 
-            try {
-                dataOut.writeUTF(dateFormat.format(data));
-                dataOut.flush();
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
-    
-    }
     
     public void chiudiConnessione()
     {
