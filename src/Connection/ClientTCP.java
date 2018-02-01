@@ -62,7 +62,7 @@ public class ClientTCP {
     public void comunica()
     {
         try {  
-                chiediData();
+                chiediSaluto();
                 System.out.println("Messaggio del server: " + dataIn.readUTF());
                 
             } catch (IOException ex) {
@@ -81,6 +81,19 @@ public class ClientTCP {
     }
         
     }
+    
+    public void chiediSaluto()
+    {
+    try {
+        dataOut.writeUTF("Ti saluto!");
+        dataOut.flush();
+        
+    } catch (IOException ex) {
+       System.err.println(ex);
+    }
+        
+    }
+ 
     
     public void chiudiConnessione()
     {
